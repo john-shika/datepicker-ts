@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+@import "@fontsource/ceviche-one/400.css";
+
+@import "@fontsource/roboto/300.css";
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/500.css";
+@import "@fontsource/roboto/700.css";
+
+@import "./tailwind.css";
+@import "./app.css";
