@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, Typography } from "@mui/material";
 
-"use client";
+("use client");
 
 export default function Copyright(): React.JSX.Element {
   const [year, setYear] = React.useState(2020);

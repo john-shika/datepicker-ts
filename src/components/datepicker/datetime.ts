@@ -29,7 +29,7 @@ export enum Days {
  * Python `datetime.date(1970, 1, 5).weekday()` equals to 0 (Monday)
  * */
 
-export function Days_dayToNum(day: Days): number {
+export function Days_daysToIdx(day: Days): number {
   switch (day) {
     case Days.Monday:
       return 0;
@@ -50,8 +50,8 @@ export function Days_dayToNum(day: Days): number {
   }
 }
 
-export function Days_numToDay(value: number): Days {
-  switch (value) {
+export function Days_idxToDays(idx: number): Days {
+  switch (idx) {
     case 0:
       return Days.Monday;
     case 1:
@@ -71,12 +71,12 @@ export function Days_numToDay(value: number): Days {
   }
 }
 
-export function Days_nextDay(day: Days): Days {
-  return Days_numToDay(Days_nextDayNum(Days_dayToNum(day)));
+export function Days_nextDays(days: Days): Days {
+  return Days_idxToDays(Days_nextDaysIdx(Days_daysToIdx(days)));
 }
 
-export function Days_prevDay(day: Days): Days {
-  return Days_numToDay(Days_prevDayNum(Days_dayToNum(day)));
+export function Days_prevDays(days: Days): Days {
+  return Days_idxToDays(Days_prevDaysIdx(Days_daysToIdx(days)));
 }
 
 /*
@@ -88,19 +88,19 @@ export function Days_prevDay(day: Days): Days {
  * - Sunday is the last, index at 6
  * */
 
-export function Days_nextDayNum(value: number): number {
-  let val = value + 1;
+export function Days_nextDaysIdx(idx: number): number {
+  let val = idx + 1;
   if (val > 6) val += -7;
   return val;
 }
 
-export function Days_prevDayNum(value: number): number {
-  let val = value - 1;
+export function Days_prevDaysIdx(idx: number): number {
+  let val = idx - 1;
   if (val < 0) val += 7;
   return val;
 }
 
-export function Days_dayToName(days: Days): string {
+export function Days_daysToName(days: Days): string {
   switch (days) {
     case Days.Sunday:
       return "Sunday";
@@ -121,7 +121,7 @@ export function Days_dayToName(days: Days): string {
   }
 }
 
-export function Days_nameToDay(value: string): Days {
+export function Days_nameToDays(value: string): Days {
   switch (value.toLowerCase()) {
     case "sun":
     case "sunday":
@@ -169,8 +169,8 @@ export enum Months {
   December,
 }
 
-export function Months_monthToNum(month: Months): number {
-  switch (month) {
+export function Months_monthsToIdx(months: Months): number {
+  switch (months) {
     case Months.January:
       return 1;
     case Months.February:
@@ -200,7 +200,7 @@ export function Months_monthToNum(month: Months): number {
   }
 }
 
-export function Months_numToMonth(value: number): Months {
+export function Months_idxToMonths(value: number): Months {
   switch (value) {
     case 1:
       return Months.January;
@@ -231,12 +231,12 @@ export function Months_numToMonth(value: number): Months {
   }
 }
 
-export function Months_nextMonth(month: Months): Months {
-  return Months_numToMonth(Months_nextMonth(Months_monthToNum(month)));
+export function Months_nextMonths(months: Months): Months {
+  return Months_idxToMonths(Months_nextMonths(Months_monthsToIdx(months)));
 }
 
-export function Months_prevMonth(month: Months): Months {
-  return Months_numToMonth(Months_prevMonthNum(Months_monthToNum(month)));
+export function Months_prevMonths(months: Months): Months {
+  return Months_idxToMonths(Months_prevMonthsIdx(Months_monthsToIdx(months)));
 }
 
 /*
@@ -248,19 +248,19 @@ export function Months_prevMonth(month: Months): Months {
  * - December is the last, value at 12
  * */
 
-export function Months_nextMonthNum(value: number): number {
-  let val = value + 1;
+export function Months_nextMonthsIdx(idx: number): number {
+  let val = idx + 1;
   if (val > 12) val += -12;
   return val;
 }
 
-export function Months_prevMonthNum(value: number): number {
-  let val = value - 1;
+export function Months_prevMonthsIdx(idx: number): number {
+  let val = idx - 1;
   if (val < 1) val += 12;
   return val;
 }
 
-export function Months_monthToName(month: Months): string {
+export function Months_monthsToName(month: Months): string {
   switch (month) {
     case Months.January:
       return "January";
@@ -291,7 +291,7 @@ export function Months_monthToName(month: Months): string {
   }
 }
 
-export function Months_nameToMonth(value: string): Months {
+export function Months_nameToMonths(value: string): Months {
   switch (value.toLowerCase()) {
     case "jan":
     case "january":
@@ -334,8 +334,8 @@ export function Months_nameToMonth(value: string): Months {
 }
 
 export enum TimeZone {
-  Local = 0,
-  UTC,
+  UTC = 0,
+  Local,
 }
 
 /*
@@ -362,17 +362,7 @@ export class Timedelta {
 
   // public weekday: number;
 
-  constructor(
-    years: number,
-    months: Months,
-    days: Days,
-    hours: number,
-    minutes: number,
-    seconds: number,
-    milliseconds: number,
-    nanoseconds: number,
-    timezone: TimeZone = TimeZone.UTC
-  ) {
+  constructor(years: number, months: Months, days: Days, hours: number, minutes: number, seconds: number, milliseconds: number, nanoseconds: number, timezone: TimeZone = TimeZone.UTC) {
     this.years = years;
     this.months = months;
     this.days = days;
@@ -387,33 +377,20 @@ export class Timedelta {
 
 /*
  * timedeltaZero
+ * Start At 0
+ * */
+
+export const timedeltaZero: Timedelta = new Timedelta(0, 0, 0, 0, 0, 0, 0, 0, TimeZone.UTC);
+
+/*
+ * timedeltaZeroZulu
  * Start At 1 (Thursday), January 1970
  * */
 
-export const timedeltaZero: Timedelta = new Timedelta(
-  1970,
-  1,
-  1,
-  0,
-  0,
-  0,
-  0,
-  0,
-  TimeZone.UTC
-);
+export const timedeltaZeroZulu: Timedelta = new Timedelta(1970, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC);
 
 export function Timedelta_copy(timedelta: Timedelta): Timedelta {
-  return new Timedelta(
-    timedelta.years,
-    timedelta.months,
-    timedelta.days,
-    timedelta.hours,
-    timedelta.minutes,
-    timedelta.seconds,
-    timedelta.milliseconds,
-    timedelta.nanoseconds,
-    timedelta.timezone
-  );
+  return new Timedelta(timedelta.years, timedelta.months, timedelta.days, timedelta.hours, timedelta.minutes, timedelta.seconds, timedelta.milliseconds, timedelta.nanoseconds, timedelta.timezone);
 }
 
 /*
@@ -432,24 +409,24 @@ export function Timedelta_copy(timedelta: Timedelta): Timedelta {
  * December: 31 days
  * */
 
-export function Timedelta_isLeapYears(year: number): boolean {
-  if (year % 4 !== 0) return false;
-  if (year % 100 !== 0 || year % 400 === 0) return true;
+export function Timedelta_isLeapYears(years: number): boolean {
+  if (years % 4 !== 0) return false;
+  if (years % 100 !== 0 || years % 400 === 0) return true;
   return false;
 }
 
-export function Timedelta_daysInYears(year: number): number {
-  if (Timedelta_isLeapYears(year)) return 366;
+export function Timedelta_daysInYears(years: number): number {
+  if (Timedelta_isLeapYears(years)) return 366;
   return 365;
 }
 
-export function Timedelta_daysInFebruary(year: number): number {
-  if (Timedelta_isLeapYears(year)) return 29;
+export function Timedelta_daysInFebruary(years: number): number {
+  if (Timedelta_isLeapYears(years)) return 29;
   return 28;
 }
 
-export function Timedelta_daysInMonths(year: number, month: Months): number {
-  switch (month) {
+export function Timedelta_daysInMonths(years: number, months: Months): number {
+  switch (months) {
     case Months.January:
     case Months.March:
     case Months.May:
@@ -459,7 +436,7 @@ export function Timedelta_daysInMonths(year: number, month: Months): number {
     case Months.December:
       return 31;
     case Months.February:
-      return Timedelta_daysInFebruary(year);
+      return Timedelta_daysInFebruary(years);
     default:
       return 30;
   }
@@ -482,17 +459,7 @@ export function Timedelta_daysInMilliseconds(days: number): number {
 }
 
 export function Timedelta_equals(a: Timedelta, b: Timedelta): boolean {
-  return (
-    a.years === b.years &&
-    a.months === b.months &&
-    a.days === b.days &&
-    a.hours === b.hours &&
-    a.minutes === b.minutes &&
-    a.seconds === b.seconds &&
-    a.milliseconds === b.milliseconds &&
-    a.nanoseconds === b.nanoseconds &&
-    a.timezone === b.timezone
-  );
+  return a.years === b.years && a.months === b.months && a.days === b.days && a.hours === b.hours && a.minutes === b.minutes && a.seconds === b.seconds && a.milliseconds === b.milliseconds && a.nanoseconds === b.nanoseconds && a.timezone === b.timezone;
 }
 
 export function Timedelta_lessThan(a: Timedelta, b: Timedelta): boolean {
@@ -579,10 +546,7 @@ export function Timedelta_greaterThan(a: Timedelta, b: Timedelta): boolean {
   return false;
 }
 
-export function Timedelta_greaterThanEquals(
-  a: Timedelta,
-  b: Timedelta
-): boolean {
+export function Timedelta_greaterThanEquals(a: Timedelta, b: Timedelta): boolean {
   if (a.years > b.years) return true;
   if (a.years < b.years) return false;
 
@@ -630,10 +594,7 @@ export function Timedelta_addYears(timedelta: Timedelta, years: number): void {
  * @return void
  * */
 
-export function Timedelta_addMonths(
-  timedelta: Timedelta,
-  months: number
-): void {
+export function Timedelta_addMonths(timedelta: Timedelta, months: number): void {
   return;
 }
 
@@ -644,14 +605,84 @@ export function Timedelta_addMonths(
  * */
 
 export function Timedelta_daysCounterInYears(timedelta: Timedelta): number {
-  return 0;
+  // days normalized in current years
+  Timedelta_daysNormInYears(timedelta);
+
+  let currentYears = timedelta.years;
+  let currentMonths = timedelta.months;
+  let daysLeft = timedelta.days;
+
+  let daysInMonths = 0;
+  for (let m = 1; m < currentMonths; m++) {
+    daysInMonths = Timedelta_daysInMonths(currentYears, m);
+    if (m % 12 === 0) currentYears += 1; // months is overflow
+    daysLeft += daysInMonths;
+  }
+
+  return daysLeft;
 }
 
-export function Timedelta_daysNormInYears(
-  years: number,
-  months: number,
-  days: number
-): void {
+export function Timedelta_daysNormInYears(timedelta: Timedelta): void {
+  let currentYears = timedelta.years;
+  let currentMonths = timedelta.months;
+  let daysLeft = timedelta.days;
+
+  /// Years
+
+  while (currentMonths <= 0) {
+    currentMonths += 12;
+    currentYears += -1;
+  }
+
+  while (12 < currentMonths) {
+    currentMonths += -12;
+    currentYears += 1;
+  }
+
+  /// Months
+
+  while (daysLeft <= 0) {
+    currentMonths = Months_prevMonthsIdx(currentMonths);
+    if (currentMonths === 12) currentYears += -1;
+    const daysInMonth = Timedelta_daysInMonths(currentYears, currentMonths);
+    daysLeft += daysInMonth;
+  }
+
+  let daysInMonths = 0;
+  while (true) {
+    daysInMonths = Timedelta_daysInMonths(currentYears, currentMonths);
+    if (daysLeft <= daysInMonths) break;
+
+    currentMonths = Months_nextMonthsIdx(currentMonths);
+    if (currentMonths === 1) currentYears += 1;
+    daysLeft += -daysInMonths;
+  }
+
+  // update timedelta
+  timedelta.years = currentYears;
+  timedelta.months = currentMonths;
+  timedelta.days = daysLeft;
+
+  return;
+}
+
+export function Timedelta_secondsNormInYears(timedelta: Timedelta): void {
+  let currentHours = timedelta.hours;
+  let currentMinutes = timedelta.minutes;
+  let currentSeconds = timedelta.seconds;
+  let currentMs = timedelta.milliseconds;
+  let currentNs = timedelta.nanoseconds;
+
+  /// Hours
+
+  // 60
+
+  /// Minutes
+  /// Seconds
+  /// Milliseconds
+
+  // nanoseconds
+
   return;
 }
 
@@ -672,13 +703,13 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
 
     // short days
     if (days <= timedelta.days) {
-      let daysLeft = timedelta.days - days;
-      let currentMonths = timedelta.months;
       let currentYears = timedelta.years;
+      let currentMonths = timedelta.months;
+      let daysLeft = timedelta.days - days;
 
       // if days left is zero
       if (daysLeft === 0) {
-        currentMonths = Months_prevMonthNum(currentMonths);
+        currentMonths = Months_prevMonthsIdx(currentMonths);
         if (currentMonths === 12) currentYears += -1;
 
         daysLeft = Timedelta_daysInMonths(currentYears, currentMonths);
@@ -691,14 +722,13 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
       return;
     }
 
+    let currentYears = timedelta.years;
+    let currentMonths = timedelta.months;
     // is not zero value
     let daysLeft = days - timedelta.days;
-    // let currentDay = timedelta.days;
-    let currentMonths = timedelta.months;
-    let currentYears = timedelta.years;
 
     // timedelta days is zero, make previous by current months
-    currentMonths = Months_prevMonthNum(currentMonths);
+    currentMonths = Months_prevMonthsIdx(currentMonths);
     if (currentMonths == 12) currentYears += -1;
     // currentDay = Timedelta_daysInMonth(currentYear, currentMonth);
 
@@ -746,6 +776,9 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
       currentYears = prevYears;
     }
 
+    // normalize days left with days in years
+    // register current months like additions days
+
     // register current months
     for (let m = 12; 1 <= m; m--) {
       currentMonths = m;
@@ -788,7 +821,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
   }
 
   // register current months
-  for (let m = 1; m < 12; m++) {
+  for (let m = 1; m <= 12; m++) {
     currentMonths = m;
 
     const daysInMonths = Timedelta_daysInMonths(currentYears, m);
@@ -872,10 +905,7 @@ export function Timedelta_addHours(timedelta: Timedelta, hours: number): void {
  * @return void
  * */
 
-export function Timedelta_addMinutes(
-  timedelta: Timedelta,
-  minutes: number
-): void {
+export function Timedelta_addMinutes(timedelta: Timedelta, minutes: number): void {
   if (minutes === 0) return;
 
   if (minutes < 0) {
@@ -935,10 +965,7 @@ export function Timedelta_addMinutes(
  * @return void
  * */
 
-export function Timedelta_addSeconds(
-  timedelta: Timedelta,
-  seconds: number
-): void {
+export function Timedelta_addSeconds(timedelta: Timedelta, seconds: number): void {
   if (seconds === 0) return;
 
   if (seconds < 0) {
@@ -998,10 +1025,7 @@ export function Timedelta_addSeconds(
  * @return void
  * */
 
-export function Timedelta_addMilliseconds(
-  timedelta: Timedelta,
-  milliseconds: number
-): void {
+export function Timedelta_addMilliseconds(timedelta: Timedelta, milliseconds: number): void {
   if (milliseconds === 0) return;
 
   if (milliseconds < 0) {
@@ -1061,10 +1085,7 @@ export function Timedelta_addMilliseconds(
  * @return void
  * */
 
-export function Timedelta_addNanoseconds(
-  timedelta: Timedelta,
-  nanoseconds: number
-): void {
+export function Timedelta_addNanoseconds(timedelta: Timedelta, nanoseconds: number): void {
   if (nanoseconds === 0) return;
 
   if (nanoseconds < 0) {
@@ -1132,8 +1153,7 @@ function Timedelta_normalize(timedelta: Timedelta): void {
 }
 
 export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number] {
-  if (timedelta.timezone !== TimeZone.UTC)
-    throw new Error("Invalid timezone: expected in universal time zone!");
+  if (timedelta.timezone !== TimeZone.UTC) throw new Error("Invalid timezone: expected in universal time zone!");
   // if (Timedelta_greaterThan(timedeltaZero, timedelta)) throw new Error("Invalid timedelta: calculation exceeds!");
 
   // normalize timedelta source
@@ -1141,7 +1161,7 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number] {
 
   // skip with estimate year caches in decade since 1970 1990 2010
 
-  let timedeltaStart = Timedelta_copy(timedeltaZero);
+  let timedeltaStart = Timedelta_copy(timedeltaZeroZulu);
 
   let stateMs = 0;
   let stateNs = 0;
@@ -1172,10 +1192,7 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number] {
       }
 
       if (timedeltaStart.months > timedelta.months) {
-        const days = Timedelta_daysInMonths(
-          timedelta.years,
-          timedeltaStart.months
-        );
+        const days = Timedelta_daysInMonths(timedelta.years, timedeltaStart.months);
         Timedelta_addDays(timedeltaStart, -days);
         stateMs += -Timedelta_daysInMilliseconds(days);
       }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box } from "@mui/material";
 
-"use client";
+("use client");
 
 interface BoxGridProps {
   children?: React.ReactNode;
@@ -34,12 +34,7 @@ interface BoxGridProps {
  * </initial-value>
  * */
 
-export default function BoxGrid({
-  children,
-  className,
-  gap,
-  grid,
-}: BoxGridProps): React.JSX.Element {
+export default function BoxGrid({ children, className, gap, grid }: BoxGridProps): React.JSX.Element {
   gap = gap ?? 0;
   grid = grid ?? "none";
   return (

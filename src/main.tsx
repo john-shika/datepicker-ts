@@ -1,12 +1,16 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
+import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import createEmotionCache from "./createEmotionCache.ts";
 import theme from "./theme.ts";
 import App from "./app.tsx";
 import "./styles/index.css";
 
 const main = () => {
+  const cache = createEmotionCache();
+  
   React.startTransition(() => {
     const fragment = document.createDocumentFragment();
     const ownerDocument = fragment.ownerDocument;
@@ -17,10 +21,12 @@ const main = () => {
     ReactDOM.createRoot(rootElement).render(
       <>
         <React.StrictMode>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <App />
-          </ThemeProvider>
+          <CacheProvider value={cache}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <App />
+            </ThemeProvider>
+          </CacheProvider>
         </React.StrictMode>
       </>
     );
@@ -29,6 +35,7 @@ const main = () => {
 
 const preload = (obj: { once: boolean }) => {
   if (typeof obj?.once === "boolean" && !obj.once) return;
+  console.log(`document.readyState = "${document.readyState}";`);
 
   if (document.readyState === "complete") {
     obj.once = false;
@@ -45,6 +52,14 @@ let obj = {
   once: true,
 };
 
-window.onload = () => preload(obj);
-document.onload = () => preload(obj);
-document.onreadystatechange = () => preload(obj);
+window.addEventListener("load", () => {
+  preload(obj);
+});
+
+document.addEventListener("readystatechange", () => {
+  preload(obj);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  preload(obj);
+});

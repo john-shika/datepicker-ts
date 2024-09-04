@@ -1,10 +1,11 @@
 import * as React from "react";
-import * as TimeX from "./datetime";
 import Show from "./components/Show";
+import * as DateTimeMod from "./datetime";
 
+// @inject to global namespace
 if (typeof window === "object") {
-  Object.defineProperty(window, "TimeX", {
-    get: () => TimeX,
+  Object.defineProperty(window, "DateTimeMod", {
+    get: () => DateTimeMod,
     configurable: true,
     enumerable: true,
     // writable: false,

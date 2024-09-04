@@ -1,4 +1,4 @@
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vite";
 
@@ -6,26 +6,18 @@ export default defineConfig({
   build: {
     minify: true,
     outDir: "build",
-    sourcemap: true,
   },
   optimizeDeps: {
     include: ["@emotion/styled"],
   },
-  plugins: [tsconfigPaths(), react()],
+  plugins: [
+    tsconfigPaths(),
+    react({
+      jsxImportSource: "@emotion/react",
+    }),
+  ],
   resolve: {
-    extensions: [
-      ".cjs",
-      ".mjs",
-      ".js",
-      ".mts",
-      ".d.cts",
-      ".d.mts",
-      ".d.ts",
-      ".ts",
-      ".jsx",
-      ".tsx",
-      ".json",
-    ],
+    extensions: [".cjs", ".mjs", ".js", ".mts", ".d.cts", ".d.mts", ".d.ts", ".ts", ".jsx", ".tsx", ".json"],
   },
   preview: {
     port: 5173,

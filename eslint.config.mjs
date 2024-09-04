@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
+import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
@@ -10,16 +11,7 @@ const config = {
     "no-unused-vars": "warn",
     "no-undef": "warn",
   },
-  ignores: [
-    ".env",
-    ".mypy_cache/**/*",
-    "__pycache__/**/*",
-    "build/**/*",
-    "dist/**/*",
-    "node_modules/**/*",
-    "public/**/*",
-    "src/styles/tailwind.css",
-  ],
+  ignores: [".env", ".mypy_cache/**/*", "__pycache__/**/*", "build/**/*", "dist/**/*", "node_modules/**/*", "public/**/*", "src/styles/tailwind.css"],
 };
 
 export default tseslint.config(config, {
@@ -30,14 +22,12 @@ export default tseslint.config(config, {
     globals: globals.browser,
   },
   plugins: {
+    react: react,
     "react-hooks": reactHooks,
     "react-refresh": reactRefresh,
   },
   rules: {
     ...reactHooks.configs.recommended.rules,
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
-    ],
+    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
   },
 });

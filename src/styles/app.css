@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
 :root {
-  background-color: grey !important;
+  --background: #3b3b3b;
+  --foreground: #e4e4e4;
+}
+
+body {
+  background-color: var(--background) !important;
+  /* color: var(--foreground) !important; */
 }
