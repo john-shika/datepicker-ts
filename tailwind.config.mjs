@@ -1,8 +1,6 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
+/** @type {import("tailwindcss").Config} */
+const config = {
   content: ["./src/**/*.{cjs,mjs,js,jsx,cts,mts,ts,tsx,mdx}"],
-  important: "#root",
   theme: {},
   corePlugins: {
     preflight: false,
