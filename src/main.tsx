@@ -10,7 +10,7 @@ import "./styles/index.css";
 
 const main = () => {
   const cache = createEmotionCache();
-  
+
   React.startTransition(() => {
     const fragment = document.createDocumentFragment();
     const ownerDocument = fragment.ownerDocument;
@@ -33,12 +33,12 @@ const main = () => {
   });
 };
 
-const preload = (obj: { once: boolean }) => {
-  if (typeof obj?.once === "boolean" && !obj.once) return;
+const preload = (obj: { called: boolean }) => {
+  if (typeof obj?.called === "boolean" && obj.called) return;
   console.log(`document.readyState = "${document.readyState}";`);
 
   if (document.readyState === "complete") {
-    obj.once = false;
+    obj.called = true;
 
     if (typeof window?.requestIdleCallback === "function") {
       window.requestIdleCallback(main);
@@ -48,18 +48,22 @@ const preload = (obj: { once: boolean }) => {
   }
 };
 
-let obj = {
-  once: true,
-};
+(() => {
+  "use strict";
 
-window.addEventListener("load", () => {
-  preload(obj);
-});
+  let e = { called: false };
 
-document.addEventListener("readystatechange", () => {
-  preload(obj);
-});
+  if (typeof window != "object" && typeof document != "object") throw new Error("DOM content is not available!");
 
-document.addEventListener("DOMContentLoaded", () => {
-  preload(obj);
-});
+  window.addEventListener("load", () => {
+    preload(e);
+  });
+
+  document.addEventListener("readystatechange", () => {
+    preload(e);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    preload(e);
+  });
+})();

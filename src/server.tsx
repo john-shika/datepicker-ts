@@ -9,7 +9,7 @@ import createEmotionCache from "./createEmotionCache";
 import theme from "./theme";
 import App from "./app";
 
-"use server";
+("use server");
 
 // BANG: bun ./src/server.tsx
 // NOTE: This is experimental features and not working properly
@@ -29,7 +29,7 @@ const main = async () => {
   app.use("*", (req, res) => {
     const cache = createEmotionCache();
     const { extractCriticalToChunks, constructStyleTagsFromChunks } = createEmotionServer(cache);
-  
+
     const html = ReactDOMServer.renderToString(
       <>
         <CacheProvider value={cache}>
@@ -40,10 +40,10 @@ const main = async () => {
         </CacheProvider>
       </>
     );
-  
+
     const emotionChunks = extractCriticalToChunks(html);
     const emotionCss = constructStyleTagsFromChunks(emotionChunks);
-  
+
     res.send(`
   <!doctype html>
   <html lang="en">
@@ -75,7 +75,7 @@ const main = async () => {
 
   app.listen(3000, () => {
     console.log("Server is running on http://localhost:3000");
-  });  
+  });
 };
 
 if (typeof document === "undefined" && typeof window === "undefined") main();

@@ -11,7 +11,7 @@ const config = {
     "no-unused-vars": "warn",
     "no-undef": "warn",
   },
-  ignores: [".env", ".mypy_cache/**/*", "__pycache__/**/*", "build/**/*", "dist/**/*", "node_modules/**/*", "public/**/*", "src/styles/tailwind.css"],
+  ignores: [".env", ".mypy_cache/**/*", "__pycache__/**/*", "build/**/*", "dist/**/*", "node_modules/**/*", "src/styles/tailwind.css"],
 };
 
 export default tseslint.config(config, {
