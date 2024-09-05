@@ -623,6 +623,7 @@ export function Timedelta_addYears(timedelta: Timedelta, years: number): void {
       let prevYears = currentYears - 1;
 
       const daysInYears = Timedelta_daysInYears(prevYears);
+
       Timedelta_addDays(timedelta, -daysInYears);
 
       // bad performance, try using days in years instead of months in years
