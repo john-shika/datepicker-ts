@@ -1,14 +1,8 @@
 import * as React from "react";
 import { Box } from "@mui/material";
+import type { BoxGridProps } from "./interfaces";
 
 ("use client");
-
-interface BoxGridProps {
-  children?: React.ReactNode;
-  className?: string;
-  gap?: number;
-  grid?: string;
-}
 
 /*
  * attributes = grid-auto-columns | grid-auto-flow | grid-auto-rows | grid-template-areas | grid-template-columns | grid-template-rows
@@ -35,8 +29,10 @@ interface BoxGridProps {
  * */
 
 export default function BoxGrid({ children, className, gap, grid }: BoxGridProps): React.JSX.Element {
+  // props handling
   gap = gap ?? 0;
   grid = grid ?? "none";
+
   return (
     <>
       <Box

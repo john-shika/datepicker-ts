@@ -9,3 +9,13 @@
 
 @import "./tailwind.css";
 @import "./app.css";
+
+.tsparticles-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  height: 480px;
+  z-index: -1;
+}

@@ -1,3 +1,25 @@
+const MONTHS_IN_YEAR = 12;
+const DAYS_IN_YEAR = 365;
+const DAYS_IN_LEAP_YEAR = 366;
+const DAYS_IN_WEEK = 7;
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const SECONDS_IN_MINUTE = 60;
+const MILLISECONDS_IN_SECOND = 1000;
+const MICROSECONDS_IN_MILLISECOND = 1000;
+const NANOSECONDS_IN_MICROSECOND = 1000;
+
+// typedef int64_t duration_years_t;
+// typedef int64_t duration_months_t;
+// typedef int64_t duration_weekdays_t;
+// typedef int64_t duration_days_t;
+// typedef int64_t duration_hours_t;
+// typedef int64_t duration_minutes_t;
+// typedef int64_t duration_seconds_t;
+// typedef int64_t duration_ms_t;
+// typedef int64_t duration_us_t;
+// typedef int64_t duration_ns_t;
+
 /*
  * Weekday Indexes
  * mon tue wed thu fri sat sun
@@ -194,7 +216,7 @@ export function Months_monthsToIdx(months: Months): number {
     case Months.November:
       return 11;
     case Months.December:
-      return 12;
+      return MONTHS_IN_YEAR;
     default:
       throw new Error("Invalid Months");
   }
@@ -224,7 +246,7 @@ export function Months_idxToMonths(value: number): Months {
       return Months.October;
     case 11:
       return Months.November;
-    case 12:
+    case MONTHS_IN_YEAR:
       return Months.December;
     default:
       return Months.Unknown;
@@ -245,18 +267,18 @@ export function Months_prevMonths(months: Months): Months {
  * where:
  * - January is the first, start at 1
  * - February is the seconds, value at 2
- * - December is the last, value at 12
+ * - December is the last, value at MONTHS_IN_YEAR
  * */
 
 export function Months_nextMonthsIdx(idx: number): number {
   let val = idx + 1;
-  if (val > 12) val += -12;
+  if (val > MONTHS_IN_YEAR) val += -MONTHS_IN_YEAR;
   return val;
 }
 
 export function Months_prevMonthsIdx(idx: number): number {
   let val = idx - 1;
-  if (val < 1) val += 12;
+  if (val < 1) val += MONTHS_IN_YEAR;
   return val;
 }
 
@@ -357,7 +379,7 @@ export class Timedelta {
   public minutes: number;
   public seconds: number;
   public milliseconds: number;
-  public nanoseconds: number;
+  public microseconds: number;
   public timezone: TimeZone;
 
   // public weekday: number;
@@ -370,7 +392,7 @@ export class Timedelta {
     minutes: number,
     seconds: number,
     milliseconds: number,
-    nanoseconds: number,
+    microseconds: number,
     timezone: TimeZone = TimeZone.UTC
   ) {
     this.years = years;
@@ -380,7 +402,7 @@ export class Timedelta {
     this.minutes = minutes;
     this.seconds = seconds;
     this.milliseconds = milliseconds;
-    this.nanoseconds = nanoseconds;
+    this.microseconds = microseconds;
     this.timezone = timezone;
   }
 }
@@ -408,7 +430,7 @@ export function Timedelta_copy(timedelta: Timedelta): Timedelta {
     timedelta.minutes,
     timedelta.seconds,
     timedelta.milliseconds,
-    timedelta.nanoseconds,
+    timedelta.microseconds,
     timedelta.timezone
   );
 }
@@ -436,8 +458,8 @@ export function Timedelta_isLeapYears(years: number): boolean {
 }
 
 export function Timedelta_daysInYears(years: number): number {
-  if (Timedelta_isLeapYears(years)) return 366;
-  return 365;
+  if (Timedelta_isLeapYears(years)) return DAYS_IN_LEAP_YEAR;
+  return DAYS_IN_YEAR;
 }
 
 export function Timedelta_daysInFebruary(years: number): number {
@@ -463,19 +485,19 @@ export function Timedelta_daysInMonths(years: number, months: Months): number {
 }
 
 export function Timedelta_secondsInMilliseconds(seconds: number): number {
-  return seconds * 1000;
+  return seconds * MILLISECONDS_IN_SECOND;
 }
 
 export function Timedelta_minutesInMilliseconds(minutes: number): number {
-  return Timedelta_secondsInMilliseconds(minutes * 60);
+  return Timedelta_secondsInMilliseconds(minutes * SECONDS_IN_MINUTE);
 }
 
 export function Timedelta_hoursInMilliseconds(hours: number): number {
-  return Timedelta_minutesInMilliseconds(hours * 60);
+  return Timedelta_minutesInMilliseconds(hours * MINUTES_IN_HOUR);
 }
 
 export function Timedelta_daysInMilliseconds(days: number): number {
-  return Timedelta_hoursInMilliseconds(days * 24);
+  return Timedelta_hoursInMilliseconds(days * HOURS_IN_DAY);
 }
 
 export function Timedelta_equals(a: Timedelta, b: Timedelta): boolean {
@@ -487,7 +509,7 @@ export function Timedelta_equals(a: Timedelta, b: Timedelta): boolean {
     a.minutes === b.minutes &&
     a.seconds === b.seconds &&
     a.milliseconds === b.milliseconds &&
-    a.nanoseconds === b.nanoseconds &&
+    a.microseconds === b.microseconds &&
     a.timezone === b.timezone
   );
 }
@@ -514,8 +536,8 @@ export function Timedelta_lessThan(a: Timedelta, b: Timedelta): boolean {
   if (a.milliseconds < b.milliseconds) return true;
   if (a.milliseconds > b.milliseconds) return false;
 
-  if (a.nanoseconds < b.nanoseconds) return true;
-  if (a.nanoseconds > b.nanoseconds) return false;
+  if (a.microseconds < b.microseconds) return true;
+  if (a.microseconds > b.microseconds) return false;
 
   return false;
 }
@@ -542,8 +564,8 @@ export function Timedelta_lessThanEquals(a: Timedelta, b: Timedelta): boolean {
   if (a.milliseconds < b.milliseconds) return true;
   if (a.milliseconds > b.milliseconds) return false;
 
-  if (a.nanoseconds < b.nanoseconds) return true;
-  if (a.nanoseconds > b.nanoseconds) return false;
+  if (a.microseconds < b.microseconds) return true;
+  if (a.microseconds > b.microseconds) return false;
 
   return true;
 }
@@ -570,8 +592,8 @@ export function Timedelta_greaterThan(a: Timedelta, b: Timedelta): boolean {
   if (a.milliseconds > b.milliseconds) return true;
   if (a.milliseconds < b.milliseconds) return false;
 
-  if (a.nanoseconds > b.nanoseconds) return true;
-  if (a.nanoseconds < b.nanoseconds) return false;
+  if (a.microseconds > b.microseconds) return true;
+  if (a.microseconds < b.microseconds) return false;
 
   return false;
 }
@@ -598,8 +620,8 @@ export function Timedelta_greaterThanEquals(a: Timedelta, b: Timedelta): boolean
   if (a.milliseconds > b.milliseconds) return true;
   if (a.milliseconds < b.milliseconds) return false;
 
-  if (a.nanoseconds > b.nanoseconds) return true;
-  if (a.nanoseconds < b.nanoseconds) return false;
+  if (a.microseconds > b.microseconds) return true;
+  if (a.microseconds < b.microseconds) return false;
 
   return true;
 }
@@ -628,7 +650,7 @@ export function Timedelta_addYears(timedelta: Timedelta, years: number): void {
 
       // bad performance, try using days in years instead of months in years
       // months in years same as days in months in years, loop nested
-      // Timedelta_addMonths(timedelta, -12);
+      // Timedelta_addMonths(timedelta, -MONTHS_IN_YEAR);
     }
 
     return;
@@ -642,7 +664,7 @@ export function Timedelta_addYears(timedelta: Timedelta, years: number): void {
 
     // bad performance, try using days in years instead of months in years
     // months in years same as days in months in years, loop nested
-    // Timedelta_addMonths(timedelta, 12);
+    // Timedelta_addMonths(timedelta, MONTHS_IN_YEAR);
   }
 
   return;
@@ -668,7 +690,7 @@ export function Timedelta_addMonths(timedelta: Timedelta, months: number): void 
 
       let prevYears = currentYears;
       let prevMonths = Months_prevMonthsIdx(currentMonths);
-      if (prevMonths === 12) prevYears += -1;
+      if (prevMonths === MONTHS_IN_YEAR) prevYears += -1;
 
       let daysInMonths = Timedelta_daysInMonths(prevYears, prevMonths);
       Timedelta_addDays(timedelta, -daysInMonths);
@@ -705,7 +727,7 @@ export function Timedelta_daysCounterInYears(timedelta: Timedelta): number {
   let daysInMonths = 0;
   for (let m = 1; m < currentMonths; m++) {
     daysInMonths = Timedelta_daysInMonths(currentYears, m);
-    if (m % 12 === 0) currentYears += 1; // months is overflow
+    if (m % MONTHS_IN_YEAR === 0) currentYears += 1; // months is overflow
     currentDays += daysInMonths;
   }
 
@@ -727,12 +749,12 @@ export function Timedelta_dateNormInYears(timedelta: Timedelta): void {
   /// Months
 
   while (currentMonths <= 0) {
-    currentMonths += 12;
+    currentMonths += MONTHS_IN_YEAR;
     currentYears += -1;
   }
 
-  while (12 < currentMonths) {
-    currentMonths += -12;
+  while (MONTHS_IN_YEAR < currentMonths) {
+    currentMonths += -MONTHS_IN_YEAR;
     currentYears += 1;
   }
 
@@ -740,7 +762,7 @@ export function Timedelta_dateNormInYears(timedelta: Timedelta): void {
 
   while (currentDays <= 0) {
     currentMonths = Months_prevMonthsIdx(currentMonths);
-    if (currentMonths === 12) currentYears += -1;
+    if (currentMonths === MONTHS_IN_YEAR) currentYears += -1;
     const daysInMonth = Timedelta_daysInMonths(currentYears, currentMonths);
     currentDays += daysInMonth;
   }
@@ -765,80 +787,74 @@ export function Timedelta_dateNormInYears(timedelta: Timedelta): void {
 
 /*
  * function `Timedelta_secondsNormInYears` normalized time,
- * hours, minutes, seconds, milliseconds, nanoseconds (experimental feature)
+ * hours, minutes, seconds, milliseconds, microseconds (experimental feature)
  * */
 
 export function Timedelta_datetimeNormInYears(timedelta: Timedelta): void {
-  const hoursInDays = 24;
-  const minutesInHours = 60;
-  const secondsInMinutes = 60;
-  const millisInSeconds = 1000;
-  const nanosInMillis = 1000000;
-
   let currentDays = timedelta.days;
   let currentHours = timedelta.hours;
   let currentMinutes = timedelta.minutes;
   let currentSeconds = timedelta.seconds;
   let currentMillis = timedelta.milliseconds;
-  let currentNanos = timedelta.nanoseconds;
+  let currentMicros = timedelta.microseconds;
 
-  // Nanoseconds
+  // Microseconds
 
-  while (currentNanos < 0) {
-    currentNanos += nanosInMillis;
+  while (currentMicros < 0) {
+    currentMicros += MICROSECONDS_IN_MILLISECOND;
     currentMillis += -1;
   }
 
-  while (1000 <= currentNanos) {
-    currentNanos += -nanosInMillis;
+  while (MICROSECONDS_IN_MILLISECOND <= currentMicros) {
+    currentMicros += -MICROSECONDS_IN_MILLISECOND;
     currentMillis += 1;
   }
 
   /// Milliseconds
 
   while (currentMillis < 0) {
-    currentMillis += millisInSeconds;
+    currentMillis += MILLISECONDS_IN_SECOND;
     currentSeconds += -1;
   }
 
-  while (1000 <= currentMillis) {
-    currentMillis += -millisInSeconds;
+  while (MILLISECONDS_IN_SECOND <= currentMillis) {
+    currentMillis += -MILLISECONDS_IN_SECOND;
     currentSeconds += 1;
   }
 
   /// Seconds
 
   while (currentSeconds < 0) {
-    currentSeconds += secondsInMinutes;
+    currentSeconds += SECONDS_IN_MINUTE;
     currentMinutes += -1;
   }
 
-  while (60 <= currentSeconds) {
-    currentSeconds += -secondsInMinutes;
+  while (SECONDS_IN_MINUTE <= currentSeconds) {
+    currentSeconds += -SECONDS_IN_MINUTE;
     currentMinutes += 1;
   }
 
   /// Minutes
 
   while (currentMinutes < 0) {
-    currentMinutes += minutesInHours;
+    currentMinutes += MINUTES_IN_HOUR;
     currentHours += -1;
   }
 
-  while (60 <= currentMinutes) {
-    currentMinutes += -minutesInHours;
+  while (MINUTES_IN_HOUR <= currentMinutes) {
+    currentMinutes += -MINUTES_IN_HOUR;
     currentHours += 1;
   }
 
   /// Hours
 
   while (currentHours < 0) {
-    currentHours += hoursInDays;
+    currentHours += HOURS_IN_DAY;
     currentDays += -1;
   }
 
-  while (24 <= currentHours) {
-    currentHours += -hoursInDays;
+  while (HOURS_IN_DAY <= currentHours) {
+    currentHours += -HOURS_IN_DAY;
     currentDays += 1;
   }
 
@@ -847,7 +863,7 @@ export function Timedelta_datetimeNormInYears(timedelta: Timedelta): void {
   timedelta.minutes = currentMinutes;
   timedelta.seconds = currentSeconds;
   timedelta.milliseconds = currentMillis;
-  timedelta.nanoseconds = currentNanos;
+  timedelta.microseconds = currentMicros;
 
   Timedelta_dateNormInYears(timedelta);
 
@@ -880,7 +896,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
       // if days left is zero
       if (currentDays === 0) {
         currentMonths = Months_prevMonthsIdx(currentMonths);
-        if (currentMonths === 12) currentYears += -1;
+        if (currentMonths === MONTHS_IN_YEAR) currentYears += -1;
 
         currentDays = Timedelta_daysInMonths(currentYears, currentMonths);
       }
@@ -898,7 +914,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
 
     // make previous by current months
     currentMonths = Months_prevMonthsIdx(currentMonths);
-    if (currentMonths == 12) currentYears += -1;
+    if (currentMonths == MONTHS_IN_YEAR) currentYears += -1;
 
     // unload all months in current years
     for (let m = currentMonths; 1 <= m; m--) {
@@ -913,7 +929,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
 
         if (currentDays === 0) {
           currentMonths = Months_prevMonthsIdx(currentMonths);
-          if (currentMonths === 12) currentYears += -1;
+          if (currentMonths === MONTHS_IN_YEAR) currentYears += -1;
 
           currentDays = Timedelta_daysInMonths(currentYears, currentMonths);
         }
@@ -930,7 +946,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
 
     // make previous current years override current months
     currentYears += -1;
-    currentMonths = 12;
+    currentMonths = MONTHS_IN_YEAR;
 
     // try decearse by days in years
     while (true) {
@@ -944,7 +960,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
     // register current months like additions days
 
     // try decrease by days in months with reverse months in current years
-    for (let m = 12; 1 <= m; m--) {
+    for (let m = MONTHS_IN_YEAR; 1 <= m; m--) {
       currentMonths = m;
 
       const daysInMonths = Timedelta_daysInMonths(currentYears, m);
@@ -960,7 +976,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
 
     if (currentDays === 0) {
       currentMonths = Months_prevMonthsIdx(currentMonths);
-      if (currentMonths === 12) currentYears += -1;
+      if (currentMonths === MONTHS_IN_YEAR) currentYears += -1;
 
       currentDays = Timedelta_daysInMonths(currentYears, currentMonths);
     }
@@ -995,7 +1011,7 @@ export function Timedelta_addDays(timedelta: Timedelta, days: number): void {
   }
 
   // try load all months in current years
-  for (let m = 1; m <= 12; m++) {
+  for (let m = 1; m <= MONTHS_IN_YEAR; m++) {
     currentMonths = m;
 
     const daysInMonths = Timedelta_daysInMonths(currentYears, m);
@@ -1037,15 +1053,13 @@ export function Timedelta_addHours(timedelta: Timedelta, hours: number): void {
     let daysLeft = 1;
 
     while (true) {
-      const hoursInDays = 24;
-      if (currentHours <= hoursInDays) break;
-      currentHours += -hoursInDays;
+      if (currentHours <= HOURS_IN_DAY) break;
+      currentHours += -HOURS_IN_DAY;
       daysLeft += 1;
     }
 
     // normalize hours
-    const hoursInDays = 24;
-    currentHours = hoursInDays - currentHours;
+    currentHours = HOURS_IN_DAY - currentHours;
 
     timedelta.hours = currentHours;
     Timedelta_addDays(timedelta, -daysLeft);
@@ -1059,9 +1073,8 @@ export function Timedelta_addHours(timedelta: Timedelta, hours: number): void {
   let daysLeft = 0;
 
   while (true) {
-    const hoursInDays = 24;
-    if (currentHours < hoursInDays) break;
-    currentHours += -hoursInDays;
+    if (currentHours < HOURS_IN_DAY) break;
+    currentHours += -HOURS_IN_DAY;
     daysLeft += 1;
   }
 
@@ -1096,15 +1109,13 @@ export function Timedelta_addMinutes(timedelta: Timedelta, minutes: number): voi
     let hoursLeft = 1;
 
     while (true) {
-      const minutesInHours = 60;
-      if (currentMinutes <= minutesInHours) break;
-      currentMinutes += -minutesInHours;
+      if (currentMinutes <= MINUTES_IN_HOUR) break;
+      currentMinutes += -MINUTES_IN_HOUR;
       hoursLeft += 1;
     }
 
     // normalize minutes
-    const minutesInHours = 60;
-    currentMinutes = minutesInHours - currentMinutes;
+    currentMinutes = MINUTES_IN_HOUR - currentMinutes;
 
     timedelta.minutes = currentMinutes;
     Timedelta_addHours(timedelta, -hoursLeft);
@@ -1118,9 +1129,8 @@ export function Timedelta_addMinutes(timedelta: Timedelta, minutes: number): voi
   let hoursLeft = 0;
 
   while (true) {
-    const minutesInHours = 60;
-    if (currentMinutes < minutesInHours) break;
-    currentMinutes += -minutesInHours;
+    if (currentMinutes < MINUTES_IN_HOUR) break;
+    currentMinutes += -MINUTES_IN_HOUR;
     hoursLeft += 1;
   }
 
@@ -1156,15 +1166,13 @@ export function Timedelta_addSeconds(timedelta: Timedelta, seconds: number): voi
     let minutesLeft = 1;
 
     while (true) {
-      const secondsInMinutes = 60;
-      if (currentSeconds <= secondsInMinutes) break;
-      currentSeconds += -secondsInMinutes;
+      if (currentSeconds <= SECONDS_IN_MINUTE) break;
+      currentSeconds += -SECONDS_IN_MINUTE;
       minutesLeft += 1;
     }
 
     // normalize seconds
-    const secondsInMinutes = 60;
-    currentSeconds = secondsInMinutes - currentSeconds;
+    currentSeconds = SECONDS_IN_MINUTE - currentSeconds;
 
     timedelta.seconds = currentSeconds;
     Timedelta_addMinutes(timedelta, -minutesLeft);
@@ -1178,9 +1186,8 @@ export function Timedelta_addSeconds(timedelta: Timedelta, seconds: number): voi
   let minutesLeft = 0;
 
   while (true) {
-    const secondsInMinutes = 60;
-    if (currentSeconds < secondsInMinutes) break;
-    currentSeconds += -secondsInMinutes;
+    if (currentSeconds < SECONDS_IN_MINUTE) break;
+    currentSeconds += -SECONDS_IN_MINUTE;
     minutesLeft += 1;
   }
 
@@ -1216,15 +1223,13 @@ export function Timedelta_addMilliseconds(timedelta: Timedelta, milliseconds: nu
     let secondsLeft = 1;
 
     while (true) {
-      const millisInSeconds = 1000;
-      if (currentMillis <= millisInSeconds) break;
-      currentMillis += -millisInSeconds;
+      if (currentMillis <= MILLISECONDS_IN_SECOND) break;
+      currentMillis += -MILLISECONDS_IN_SECOND;
       secondsLeft += 1;
     }
 
     // normalize milliseconds
-    const millisInSeconds = 1000;
-    currentMillis = millisInSeconds - currentMillis;
+    currentMillis = MILLISECONDS_IN_SECOND - currentMillis;
 
     timedelta.milliseconds = currentMillis;
     Timedelta_addSeconds(timedelta, -secondsLeft);
@@ -1238,9 +1243,8 @@ export function Timedelta_addMilliseconds(timedelta: Timedelta, milliseconds: nu
   let secondsLeft = 0;
 
   while (true) {
-    const millisInSeconds = 1000;
-    if (currentMillis < millisInSeconds) break;
-    currentMillis += -millisInSeconds;
+    if (currentMillis < MILLISECONDS_IN_SECOND) break;
+    currentMillis += -MILLISECONDS_IN_SECOND;
     secondsLeft += 1;
   }
 
@@ -1251,60 +1255,57 @@ export function Timedelta_addMilliseconds(timedelta: Timedelta, milliseconds: nu
 }
 
 /*
- * function `Timedelta_addNanoseconds`
- * addition nanoseconds with existing current nanoseconds in timedelta itself
+ * function `Timedelta_addMicroseconds`
+ * addition microseconds with existing current microseconds in timedelta itself
  * @param timedelta Timedelta
- * @param nanoseconds number
+ * @param microseconds number
  * @return void
  * */
 
-export function Timedelta_addNanoseconds(timedelta: Timedelta, nanoseconds: number): void {
-  if (nanoseconds === 0) return;
+export function Timedelta_addMicroseconds(timedelta: Timedelta, microseconds: number): void {
+  if (microseconds === 0) return;
 
-  if (nanoseconds < 0) {
-    nanoseconds = -nanoseconds;
+  if (microseconds < 0) {
+    microseconds = -microseconds;
 
-    if (nanoseconds <= timedelta.nanoseconds) {
-      let currentNanos = timedelta.nanoseconds - nanoseconds;
-      timedelta.nanoseconds = currentNanos;
+    if (microseconds <= timedelta.microseconds) {
+      let currentMicros = timedelta.microseconds - microseconds;
+      timedelta.microseconds = currentMicros;
       return;
     }
 
-    let currentNanos = nanoseconds - timedelta.nanoseconds;
+    let currentMicros = microseconds - timedelta.microseconds;
 
     // make previous one millisecond
     let millisLeft = 1;
 
     while (true) {
-      const nanosInMillis = 1000;
-      if (currentNanos <= nanosInMillis) break;
-      currentNanos += -nanosInMillis;
+      if (currentMicros <= MICROSECONDS_IN_MILLISECOND) break;
+      currentMicros += -MICROSECONDS_IN_MILLISECOND;
       millisLeft += 1;
     }
 
-    // normalize nanoseconds
-    const nanosInMillis = 1000;
-    currentNanos = nanosInMillis - currentNanos;
+    // normalize microseconds
+    currentMicros = MICROSECONDS_IN_MILLISECOND - currentMicros;
 
-    timedelta.nanoseconds = currentNanos;
+    timedelta.microseconds = currentMicros;
     Timedelta_addMilliseconds(timedelta, -millisLeft);
 
     return;
   }
 
-  let currentNanos = timedelta.nanoseconds + nanoseconds;
+  let currentMicros = timedelta.microseconds + microseconds;
 
   // make milliseconds left start at 0
   let millisLeft = 0;
 
   while (true) {
-    const nanosInMillis = 1000;
-    if (currentNanos < nanosInMillis) break;
-    currentNanos += -nanosInMillis;
+    if (currentMicros < MICROSECONDS_IN_MILLISECOND) break;
+    currentMicros += -MICROSECONDS_IN_MILLISECOND;
     millisLeft += 1;
   }
 
-  timedelta.nanoseconds = currentNanos;
+  timedelta.microseconds = currentMicros;
   Timedelta_addMilliseconds(timedelta, millisLeft);
 
   return;
@@ -1314,7 +1315,7 @@ function Timedelta_normalize(timedelta: Timedelta): void {
   // normalize timedelta to valid timedelta for timestamp conversion
 
   // check
-  // nanoseconds
+  // microseconds
   // milliseconds
   // minutes
   // hours
@@ -1337,7 +1338,7 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number] {
   let timedeltaStart = Timedelta_copy(timedeltaZeroZulu);
 
   let stateMs = 0;
-  let stateNs = 0;
+  let stateUs = 0;
 
   while (!Timedelta_equals(timedeltaStart, timedelta)) {
     if (timedeltaStart.years !== timedelta.years) {
@@ -1453,29 +1454,29 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number] {
       continue;
     }
 
-    // extra using nanoseconds, enable future like Python equivalent (datetime) module
+    // extra using microseconds, enable future like Python equivalent (datetime) module
 
-    if (timedeltaStart.nanoseconds !== timedelta.nanoseconds) {
-      if (timedeltaStart.nanoseconds < timedelta.nanoseconds) {
-        let nanoseconds = timedelta.nanoseconds - timedeltaStart.nanoseconds;
-        timedeltaStart.nanoseconds += nanoseconds;
-        stateNs += nanoseconds;
+    if (timedeltaStart.microseconds !== timedelta.microseconds) {
+      if (timedeltaStart.microseconds < timedelta.microseconds) {
+        let microseconds = timedelta.microseconds - timedeltaStart.microseconds;
+        timedeltaStart.microseconds += microseconds;
+        stateUs += microseconds;
       }
 
-      if (timedeltaStart.nanoseconds > timedelta.nanoseconds) {
-        let nanoseconds = timedeltaStart.nanoseconds - timedelta.nanoseconds;
-        timedeltaStart.nanoseconds += -nanoseconds;
-        stateNs += -nanoseconds;
+      if (timedeltaStart.microseconds > timedelta.microseconds) {
+        let microseconds = timedeltaStart.microseconds - timedelta.microseconds;
+        timedeltaStart.microseconds += -microseconds;
+        stateUs += -microseconds;
       }
 
       continue;
     }
   }
 
-  // update nanoseconds with milliseconds
-  stateNs += stateMs * 1000;
+  // update microseconds with milliseconds
+  stateUs += stateMs * MICROSECONDS_IN_MILLISECOND;
 
-  return [stateMs, stateNs];
+  return [stateMs, stateUs];
 }
 
 export interface DateTimeImpl {
