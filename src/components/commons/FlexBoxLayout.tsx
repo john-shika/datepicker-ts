@@ -17,7 +17,7 @@ import { FlexBox_nameToRules, FlexBox_rulesToData } from ".";
  * flex-grow = 0..100
  * */
 
-export default function FlexBox({ children, className, direction, content, gap, grow, rules }: FlexBoxProps): React.JSX.Element {
+export default function FlexBoxLayout({ children, className, direction, content, gap, grow, rules }: FlexBoxProps): React.JSX.Element {
   // props handling
   content = content ?? "";
   direction = direction ?? "row";

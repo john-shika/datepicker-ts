@@ -10,5 +10,4 @@
   </table>
 </template>
 
-<script>
-</script>
+<script></script>

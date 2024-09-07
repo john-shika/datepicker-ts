@@ -1,5 +1,5 @@
 import * as React from "react";
-import Show from "./components/Show";
+import Content from "./components/Content";
 import * as DateTimeMod from "./datetime";
 
 ("use client");
@@ -14,10 +14,10 @@ if (typeof window === "object") {
   });
 }
 
-export default function DatePicker(): React.JSX.Element {
+export default function Container(): React.JSX.Element {
   return (
     <>
-      <Show />
+      <Content />
     </>
   );
 }

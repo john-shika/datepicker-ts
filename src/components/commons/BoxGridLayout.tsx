@@ -28,7 +28,7 @@ import type { BoxGridProps } from "./interfaces";
  * </initial-value>
  * */
 
-export default function BoxGrid({ children, className, gap, grid }: BoxGridProps): React.JSX.Element {
+export default function BoxGridLayout({ children, className, gap, grid }: BoxGridProps): React.JSX.Element {
   // props handling
   gap = gap ?? 0;
   grid = grid ?? "none";

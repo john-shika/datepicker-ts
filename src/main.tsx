@@ -52,7 +52,9 @@ const preload = (obj: { called: boolean }) => {
   "use strict";
 
   let e = { called: false };
-  const fn = () => { preload(e); };
+  const fn = () => {
+    preload(e);
+  };
 
   if (typeof window != "object" && typeof document != "object") throw new Error("DOM content is not available!");
 

@@ -1,13 +1,12 @@
 #!python3
 
-
 from datetime import datetime, timezone
 
 
-def generate_datetime_range(start_year, end_year):
+def generate_datetime_range(start_year: int, end_year: int, step_year: int):
     results = []
 
-    for year in range(start_year, end_year + 1, 100):
+    for year in range(start_year, end_year + 1, step_year):
 
         dt = datetime(year, 1, 1, tzinfo=timezone.utc)
         timestamp = dt.timestamp()
@@ -28,14 +27,20 @@ def generate_datetime_range(start_year, end_year):
     return results
 
 
-data = generate_datetime_range(1600, 3000)
+def main():
+    seeds = []
+    for entry in reversed(generate_datetime_range(1970, 2020, 10)):
 
+        year = entry["datetime"]["year"]
+        weekday = entry["weekday"]
+        timestamp = int(entry["timestamp"])
+        
+        fields = f"""\n    timedelta: new Timedelta({year}, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),\n    timestamp: {timestamp},\n    weekday: {weekday},\n"""
+        seed = "  {" + fields + "  }"
+        seeds.append(seed)
+        
+    data = "export const TIME_DELTA_SEEDS = [\n" + ",\n".join(seeds) + "\n]"
+    print(data)
 
-for entry in data:
-
-    year = entry["datetime"]["year"]
-    weekday = entry["weekday"]
-    timestamp = int(entry["timestamp"])
-
-    print(f"year = {year} weekday = {weekday} timestamp = {timestamp}")
-    
+if str(__name__).upper() in ("__MAIN__",):
+    main()

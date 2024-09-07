@@ -12,16 +12,15 @@ export default defineConfig({
     include: ["@emotion/styled"],
   },
   plugins: [
-    tsconfigPaths(), 
-    vue({
-    }),
-    react({ 
+    tsconfigPaths(),
+    vue({}),
+    react({
       jsxImportSource: "@emotion/react",
-    }), 
+    }),
   ],
   resolve: {
     alias: {
-      "vue": "vue/dist/vue.esm-bundler.js",
+      vue: "vue/dist/vue.esm-bundler.js",
     },
     extensions: [".cjs", ".mjs", ".js", ".mts", ".d.cts", ".d.mts", ".d.ts", ".ts", ".jsx", ".tsx", ".json"],
   },

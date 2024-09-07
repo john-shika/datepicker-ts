@@ -1,3 +1,5 @@
+import BoxGridLayout from "./BoxGridLayout";
+import FlexBoxLayout from "./FlexBoxLayout";
 import { Rules } from "./interfaces";
 
 export function FlexBox_nameToRules(name: string): Rules {
@@ -115,3 +117,14 @@ export function FlexBox_rulesToData(rules: Rules): string[] {
       return ["flex-start", "stretch"];
   }
 }
+
+export const BoxGrid = BoxGridLayout;
+export const FlexBox = FlexBoxLayout;
+
+export default {
+  BoxGrid,
+  FlexBox,
+  FlexBox_nameToRules,
+  FlexBox_rulesToData,
+  Rules,
+};

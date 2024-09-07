@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ArrowBack as ArrowBackIcon, ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
 
-export default function Show(): React.JSX.Element {
+export default function Content(): React.JSX.Element {
   return (
     <>
       <div className="w-full max-w-[328px] p-6 border border-gray-300 rounded-2xl bg-white">

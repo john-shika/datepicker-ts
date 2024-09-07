@@ -1,6 +1,5 @@
 import { ReactJsxElementProps } from "@/components/interfaces";
 
-
 export interface FlexBoxProps extends ReactJsxElementProps {
   content?: string;
   direction?: string;

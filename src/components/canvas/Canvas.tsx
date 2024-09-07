@@ -6,7 +6,6 @@ interface CanvasProps {
 }
 
 export default function Canvas({ className, style }: CanvasProps): React.JSX.Element {
-
   // props handling
 
   return (

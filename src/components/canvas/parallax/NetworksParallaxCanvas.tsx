@@ -9,14 +9,14 @@ import { genUnsafeShortUniqueId, unsafeMergeAny } from "@/utils";
 
 ("use client");
 
-export default function Networks({ className, id, width, height, density }: NetworksProps): React.JSX.Element {
+export default function NetworksParallaxCanvas({ className, id, width, height, density }: NetworksProps): React.JSX.Element {
   const uid = genUnsafeShortUniqueId();
 
   // props handling
   id = id ?? `tsparticles-${uid}`;
   width = width ?? window.innerWidth;
   height = height ?? window.innerHeight;
-  density = density ?? { width, height };
+  density = density ?? { width: 1080, height: 720 };
 
   const [init, setInit] = React.useState(false);
 
@@ -25,6 +25,9 @@ export default function Networks({ className, id, width, height, density }: Netw
       autoPlay: true,
       fullScreen: {
         enable: false,
+      },
+      interactivity: {
+        detectsOn: "window",
       },
       particles: {
         number: {
@@ -39,6 +42,8 @@ export default function Networks({ className, id, width, height, density }: Netw
   );
 
   React.useEffect(() => {
+    console.log("Initial 'Canvas/Parallax/Networks' effect...");
+    
     (async () => {
       // load config json file for `@tsparticles/engien` plugin
       await (async () => {
@@ -57,7 +62,7 @@ export default function Networks({ className, id, width, height, density }: Netw
       });
 
     return () => {
-      console.log("Refresh `Networks.tsx` scripting...");
+      console.log("Refresh 'Canvas/Parallax/Networks' effect...");
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,6 +81,11 @@ export default function Networks({ className, id, width, height, density }: Netw
           className={className}
           options={options}
           particlesLoaded={particlesLoaded}
+          //style={{
+          //  width: `${width}px`,
+          //  height: `${height}px`,
+          //  zIndex: -1,
+          //}}
           // url={config}
         />
       </>

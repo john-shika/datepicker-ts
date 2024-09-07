@@ -9,7 +9,7 @@ import parser from "@typescript-eslint/parser";
 export default tseslint.config(js.configs.recommended, {
   files: ["src/**/*.{cjs,mjs,js,jsx,cts,mts,ts,tsx,mdx,vue}"],
   languageOptions: {
-    parser: parser, 
+    parser: parser,
     ecmaVersion: 2020,
     globals: globals.browser,
   },

@@ -1,16 +1,16 @@
 import * as React from "react";
 import Layout from "./components/Layout";
-import DatePicker from "./components/datepicker/DatePicker";
-import Networks from "./components/canvas/parallax/Networks";
-import { TableVue } from "./components/table/TableVue";
+import { DatePicker } from "./components/datepicker";
+import { NetworksParallax } from "./components/canvas/parallax";
+import { Table } from "./components/table";
 
 function App(): React.JSX.Element {
   return (
     <>
       <Layout>
         <DatePicker />
-        <Networks className="tsparticles-header" />
-        <TableVue />
+        <NetworksParallax className="tsparticles-header" />
+        <Table />
       </Layout>
     </>
   );
