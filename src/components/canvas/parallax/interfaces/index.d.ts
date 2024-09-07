@@ -1,15 +1,12 @@
+import { ReactJsxElementProps } from "@/components/interfaces";
+
 export interface Density {
   width?: number;
   height?: number;
 }
 
-export interface NetworksProps {
-  className?: string;
-  id?: string;
+export interface NetworksProps extends ReactJsxElementProps {
   width?: number;
   height?: number;
   density?: Density;
 }
-
-export function genUnsafeShortUniqueId(): string;
-export function unsafeMergeAny(a: any, b: any): any;

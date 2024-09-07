@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Box } from "@mui/material";
 import type { FlexBoxProps } from "./interfaces";
-import { FlexBox_nameToRules, FlexBox_rulesToData, Rules } from ".";
+import { Rules } from "./interfaces";
+import { FlexBox_nameToRules, FlexBox_rulesToData } from ".";
 
 ("use client");
 

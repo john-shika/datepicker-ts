@@ -1,6 +1,7 @@
-export interface FlexBoxProps {
-  children?: React.ReactNode;
-  className?: string;
+import { ReactJsxElementProps } from "@/components/interfaces";
+
+
+export interface FlexBoxProps extends ReactJsxElementProps {
   content?: string;
   direction?: string;
   gap?: number;
@@ -39,9 +40,7 @@ export enum Rules {
 export function FlexBox_nameToRules(name: string): Rules;
 export function FlexBox_rulesToData(rules: Rules): string[];
 
-interface BoxGridProps {
-  children?: React.ReactNode;
-  className?: string;
+interface BoxGridProps extends ReactJsxElementProps {
   gap?: number;
   grid?: string;
 }

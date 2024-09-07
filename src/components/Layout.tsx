@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Box, Container } from "@mui/material";
+import type { ReactJsxElementProps } from "./interfaces";
 
-export default function Layout({ children }: { children?: React.ReactNode }) {
+export default function Layout({ children }: ReactJsxElementProps) {
   return (
     <>
       <Container maxWidth="xl">

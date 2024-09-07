@@ -52,18 +52,11 @@ const preload = (obj: { called: boolean }) => {
   "use strict";
 
   let e = { called: false };
+  const fn = () => { preload(e); };
 
   if (typeof window != "object" && typeof document != "object") throw new Error("DOM content is not available!");
 
-  window.addEventListener("load", () => {
-    preload(e);
-  });
-
-  document.addEventListener("readystatechange", () => {
-    preload(e);
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    preload(e);
-  });
+  window.addEventListener("load", fn);
+  document.addEventListener("readystatechange", fn);
+  document.addEventListener("DOMContentLoaded", fn);
 })();

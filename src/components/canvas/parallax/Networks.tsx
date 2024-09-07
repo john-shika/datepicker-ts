@@ -1,11 +1,11 @@
 import * as React from "react";
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { type Container, Engine, ISourceOptions } from "@tsparticles/engine";
+import type { Container, Engine, ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import config from "./config.json?url";
 import type { NetworksProps } from "./interfaces";
-import { genUnsafeShortUniqueId, unsafeMergeAny } from ".";
+import { genUnsafeShortUniqueId, unsafeMergeAny } from "@/utils";
 
 ("use client");
 
@@ -18,9 +18,9 @@ export default function Networks({ className, id, width, height, density }: Netw
   height = height ?? window.innerHeight;
   density = density ?? { width, height };
 
-  const [init, setInit] = useState(false);
+  const [init, setInit] = React.useState(false);
 
-  const options: ISourceOptions = useMemo(
+  const options: ISourceOptions = React.useMemo(
     () => ({
       autoPlay: true,
       fullScreen: {
@@ -38,7 +38,7 @@ export default function Networks({ className, id, width, height, density }: Netw
     []
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     (async () => {
       // load config json file for `@tsparticles/engien` plugin
       await (async () => {
@@ -59,6 +59,8 @@ export default function Networks({ className, id, width, height, density }: Netw
     return () => {
       console.log("Refresh `Networks.tsx` scripting...");
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const particlesLoaded = async (container?: Container): Promise<void> => {
