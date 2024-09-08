@@ -9,7 +9,7 @@ def generate_datetime_range(start_year: int, end_year: int, step_year: int):
     for year in range(start_year, end_year + 1, step_year):
 
         dt = datetime(year, 1, 1, tzinfo=timezone.utc)
-        timestamp = dt.timestamp()
+        timestamp = dt.timestamp() * 1000
         weekday = dt.weekday()
         results.append(dict(
             datetime=dict(
@@ -35,11 +35,12 @@ def main():
         weekday = entry["weekday"]
         timestamp = int(entry["timestamp"])
         
-        fields = f"""\n    timedelta: new Timedelta({year}, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),\n    timestamp: {timestamp},\n    weekday: {weekday},\n"""
+        fields = f"""\n    timedelta: new Timedelta({year}, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),\n    timestamp: {timestamp},\n    weekday: {weekday},\n    microseconds: 0,\n    timezone: TimeZone.UTC,\n"""
         seed = "  {" + fields + "  }"
         seeds.append(seed)
         
-    data = "export const TIME_DELTA_SEEDS = [\n" + ",\n".join(seeds) + "\n]"
+    data = """interface DateTimePreload {\n  timedelta: Timedelta;\n  timestamp: number;\n  weekday: number;\n  microseconds: number;\n  timezone: TimeZone;\n}\n\nexport const TIME_DELTA_SEEDS: DateTimePreload[] = [\n"""
+    data += ",\n".join(seeds) + "\n]"
     print(data)
 
 if str(__name__).upper() in ("__MAIN__",):

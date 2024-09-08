@@ -43,7 +43,7 @@ export default function NetworksParallaxCanvas({ className, id, width, height, d
 
   React.useEffect(() => {
     console.log("Initial 'Canvas/Parallax/Networks' effect...");
-    
+
     (async () => {
       // load config json file for `@tsparticles/engien` plugin
       await (async () => {

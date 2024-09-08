@@ -1,13 +1,13 @@
-const MONTHS_IN_YEAR = 12;
-const DAYS_IN_YEAR = 365;
-const DAYS_IN_LEAP_YEAR = 366;
-const DAYS_IN_WEEK = 7;
-const HOURS_IN_DAY = 24;
-const MINUTES_IN_HOUR = 60;
-const SECONDS_IN_MINUTE = 60;
-const MILLISECONDS_IN_SECOND = 1000;
-const MICROSECONDS_IN_MILLISECOND = 1000;
-const NANOSECONDS_IN_MICROSECOND = 1000;
+export const MONTHS_IN_YEAR = 12;
+export const DAYS_IN_YEAR = 365;
+export const DAYS_IN_LEAP_YEAR = 366;
+export const DAYS_IN_WEEK = 7;
+export const HOURS_IN_DAY = 24;
+export const MINUTES_IN_HOUR = 60;
+export const SECONDS_IN_MINUTE = 60;
+export const MILLISECONDS_IN_SECOND = 1000;
+export const MICROSECONDS_IN_MILLISECOND = 1000;
+export const NANOSECONDS_IN_MICROSECOND = 1000;
 
 // typedef int64_t duration_years_t;
 // typedef int64_t duration_months_t;
@@ -427,37 +427,57 @@ export const timedeltaZeroZulu: Timedelta = new Timedelta(1970, 1, 1, 0, 0, 0, 0
  * Why not 2024? Invest! Keep my jobs! Evil Laugh (0_0 )
  * */
 
-export const TIME_DELTA_SEEDS = [
+export interface DateTimePreload {
+  timedelta: Timedelta;
+  timestamp: number;
+  weekday: number;
+  microseconds: number;
+  timezone: TimeZone;
+}
+
+export const TIME_DELTA_SEEDS: DateTimePreload[] = [
   {
     timedelta: new Timedelta(2020, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
-    timestamp: 1577836800,
+    timestamp: 1577836800000,
     weekday: 2,
+    microseconds: 0,
+    timezone: TimeZone.UTC,
   },
   {
     timedelta: new Timedelta(2010, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
-    timestamp: 1262304000,
+    timestamp: 1262304000000,
     weekday: 4,
+    microseconds: 0,
+    timezone: TimeZone.UTC,
   },
   {
     timedelta: new Timedelta(2000, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
-    timestamp: 946684800,
+    timestamp: 946684800000,
     weekday: 5,
+    microseconds: 0,
+    timezone: TimeZone.UTC,
   },
   {
     timedelta: new Timedelta(1990, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
-    timestamp: 631152000,
+    timestamp: 631152000000,
     weekday: 0,
+    microseconds: 0,
+    timezone: TimeZone.UTC,
   },
   {
     timedelta: new Timedelta(1980, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
-    timestamp: 315532800,
+    timestamp: 315532800000,
     weekday: 1,
+    microseconds: 0,
+    timezone: TimeZone.UTC,
   },
   {
     timedelta: new Timedelta(1970, 1, 1, 0, 0, 0, 0, 0, TimeZone.UTC),
     timestamp: 0,
     weekday: 3,
-  },
+    microseconds: 0,
+    timezone: TimeZone.UTC,
+  }
 ];
 
 export function Timedelta_copy(timedelta: Timedelta): Timedelta {
@@ -490,19 +510,19 @@ export function Timedelta_copy(timedelta: Timedelta): Timedelta {
  * December: 31 days
  * */
 
-export function Timedelta_isLeapYears(years: number): boolean {
+export function Timedelta_isLeapYear(years: number): boolean {
   if (years % 4 !== 0) return false;
   if (years % 100 !== 0 || years % 400 === 0) return true;
   return false;
 }
 
 export function Timedelta_daysInYears(years: number): number {
-  if (Timedelta_isLeapYears(years)) return DAYS_IN_LEAP_YEAR;
+  if (Timedelta_isLeapYear(years)) return DAYS_IN_LEAP_YEAR;
   return DAYS_IN_YEAR;
 }
 
 export function Timedelta_daysInFebruary(years: number): number {
-  if (Timedelta_isLeapYears(years)) return 29;
+  if (Timedelta_isLeapYear(years)) return 29;
   return 28;
 }
 
@@ -523,20 +543,20 @@ export function Timedelta_daysInMonths(years: number, months: Months): number {
   }
 }
 
-export function Timedelta_secondsInMilliseconds(seconds: number): number {
+export function Timedelta_millisInSeconds(seconds: number): number {
   return seconds * MILLISECONDS_IN_SECOND;
 }
 
-export function Timedelta_minutesInMilliseconds(minutes: number): number {
-  return Timedelta_secondsInMilliseconds(minutes * SECONDS_IN_MINUTE);
+export function Timedelta_millisInMinutes(minutes: number): number {
+  return Timedelta_millisInSeconds(minutes * SECONDS_IN_MINUTE);
 }
 
-export function Timedelta_hoursInMilliseconds(hours: number): number {
-  return Timedelta_minutesInMilliseconds(hours * MINUTES_IN_HOUR);
+export function Timedelta_millisInHours(hours: number): number {
+  return Timedelta_millisInMinutes(hours * MINUTES_IN_HOUR);
 }
 
-export function Timedelta_daysInMilliseconds(days: number): number {
-  return Timedelta_hoursInMilliseconds(days * HOURS_IN_DAY);
+export function Timedelta_millisInDays(days: number): number {
+  return Timedelta_millisInHours(days * HOURS_IN_DAY);
 }
 
 export function Timedelta_equals(a: Timedelta, b: Timedelta): boolean {
@@ -775,19 +795,18 @@ export function Timedelta_daysCounterInYears(timedelta: Timedelta): number {
 
 /*
  * Normalize date and time using `Timedelta_timeNormInYears` for the initial stage
- * and `Timedelta_dateNormInYears` for the final stage. This function handles 
- * potential underload or overload of years, months, days, hours, minutes, and 
+ * and `Timedelta_dateNormInYears` for the final stage. This function handles
+ * potential underload or overload of years, months, days, hours, minutes, and
  * seconds.
  *
  * Note:
  * - This function is part of an experimental feature.
- * - Results are not guaranteed to be accurate but are useful for normalizing 
+ * - Results are not guaranteed to be accurate but are useful for normalizing
  *   to the correct timedelta structure.
  *
  * */
 
 export function Timedelta_datetimeNormInYears(timedelta: Timedelta): void {
-  
   // initial stage with time normalized
   Timedelta_timeNormInYears(timedelta);
 
@@ -800,27 +819,15 @@ export function Timedelta_dateNormInYears(timedelta: Timedelta): void {
   let checkMonths = timedelta.months;
   let checkDays = timedelta.days;
 
+  // override to prevent result xx/12, start at xx/1 or xx/2
+  if (checkMonths === 0 && 0 <= checkDays) {
+    if (checkDays === 0) checkDays = 1;
+    checkMonths = 1;
+  }
+
   /// Months
 
   while (checkMonths <= 0) {
-    // override to prevent result xx/12, start at xx/1 or xx/2
-    if (checkMonths === 0 && 0 <= checkDays) {
-      const daysInMonth = Timedelta_daysInMonths(checkYears, 1);
-      if (checkDays <= daysInMonth) {
-        checkMonths = 1;
-        break;
-      }
-      checkDays += -daysInMonth;
-      checkMonths = 2;
-      break;
-    }
-    // override to prevent result 30/11, start at 31/12
-    if (checkMonths === 0 && checkDays === 0) {
-      checkMonths += MONTHS_IN_YEAR;
-      checkYears += -1;
-      checkDays = Timedelta_daysInMonths(checkYears, checkMonths);
-      break;
-    }
     checkMonths += MONTHS_IN_YEAR;
     checkYears += -1;
   }
@@ -1374,7 +1381,7 @@ export function Timedelta_addMicroseconds(timedelta: Timedelta, microseconds: nu
   return;
 }
 
-export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, number] {
+export function Timedelta_preload(timedelta: Timedelta): DateTimePreload {
   if (timedelta.timezone !== TimeZone.UTC) throw new Error("Invalid timezone: expected in universal time zone!");
   // if (Timedelta_greaterThan(timedeltaZero, timedelta)) throw new Error("Invalid timedelta: calculation exceeds!");
 
@@ -1392,25 +1399,26 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       timedeltaStart = Timedelta_copy(timedeltaNear.timedelta);
       timestamp = timedeltaNear.timestamp;
       weekday = timedeltaNear.weekday;
+      break;
     }
   }
 
   let countDays = 0;
-  let countMicros = 0;
+  let microsLeft = 0;
 
   while (!Timedelta_equals(timedeltaStart, timedelta)) {
     if (timedeltaStart.years !== timedelta.years) {
       if (timedeltaStart.years < timedelta.years) {
         const days = Timedelta_daysInYears(timedeltaStart.years + 1);
         Timedelta_addDays(timedeltaStart, days);
-        timestamp += Timedelta_daysInMilliseconds(days);
+        timestamp += Timedelta_millisInDays(days);
         countDays += days;
       }
 
       if (timedeltaStart.years > timedelta.years) {
         const days = Timedelta_daysInYears(timedeltaStart.years);
         Timedelta_addDays(timedeltaStart, -days);
-        timestamp += -Timedelta_daysInMilliseconds(days);
+        timestamp += -Timedelta_millisInDays(days);
         countDays += -days;
       }
 
@@ -1422,14 +1430,14 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
         const months = timedeltaStart.months + 1;
         const days = Timedelta_daysInMonths(timedeltaStart.years, months);
         Timedelta_addDays(timedeltaStart, days);
-        timestamp += Timedelta_daysInMilliseconds(days);
+        timestamp += Timedelta_millisInDays(days);
         countDays += days;
       }
 
       if (timedeltaStart.months > timedelta.months) {
         const days = Timedelta_daysInMonths(timedelta.years, timedeltaStart.months);
         Timedelta_addDays(timedeltaStart, -days);
-        timestamp += -Timedelta_daysInMilliseconds(days);
+        timestamp += -Timedelta_millisInDays(days);
         countDays += -days;
       }
 
@@ -1440,14 +1448,14 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       if (timedeltaStart.days < timedelta.days) {
         let days = timedelta.days - timedeltaStart.days;
         Timedelta_addDays(timedeltaStart, days);
-        timestamp += Timedelta_daysInMilliseconds(days);
+        timestamp += Timedelta_millisInDays(days);
         countDays += days;
       }
 
       if (timedeltaStart.days > timedelta.days) {
         let days = timedeltaStart.days - timedelta.days;
         Timedelta_addDays(timedeltaStart, -days);
-        timestamp += -Timedelta_daysInMilliseconds(days);
+        timestamp += -Timedelta_millisInDays(days);
         countDays += -days;
       }
 
@@ -1458,13 +1466,13 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       if (timedeltaStart.hours < timedelta.hours) {
         let hours = timedelta.hours - timedeltaStart.hours;
         timedeltaStart.hours += hours;
-        timestamp += Timedelta_hoursInMilliseconds(hours);
+        timestamp += Timedelta_millisInHours(hours);
       }
 
       if (timedeltaStart.hours > timedelta.hours) {
         let hours = timedeltaStart.hours - timedelta.hours;
         timedeltaStart.hours += -hours;
-        timestamp += -Timedelta_hoursInMilliseconds(hours);
+        timestamp += -Timedelta_millisInHours(hours);
       }
 
       continue;
@@ -1474,13 +1482,13 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       if (timedeltaStart.minutes < timedelta.minutes) {
         let minutes = timedelta.minutes - timedeltaStart.minutes;
         timedeltaStart.minutes += minutes;
-        timestamp += Timedelta_minutesInMilliseconds(minutes);
+        timestamp += Timedelta_millisInMinutes(minutes);
       }
 
       if (timedeltaStart.minutes > timedelta.minutes) {
         let minutes = timedeltaStart.minutes - timedelta.minutes;
         timedeltaStart.minutes += -minutes;
-        timestamp += -Timedelta_minutesInMilliseconds(minutes);
+        timestamp += -Timedelta_millisInMinutes(minutes);
       }
 
       continue;
@@ -1490,13 +1498,13 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       if (timedeltaStart.seconds < timedelta.seconds) {
         let seconds = timedelta.seconds - timedeltaStart.seconds;
         timedeltaStart.seconds += seconds;
-        timestamp += Timedelta_secondsInMilliseconds(seconds);
+        timestamp += Timedelta_millisInSeconds(seconds);
       }
 
       if (timedeltaStart.seconds > timedelta.seconds) {
         let seconds = timedeltaStart.seconds - timedelta.seconds;
         timedeltaStart.seconds += -seconds;
-        timestamp += -Timedelta_secondsInMilliseconds(seconds);
+        timestamp += -Timedelta_millisInSeconds(seconds);
       }
 
       continue;
@@ -1524,111 +1532,177 @@ export function Timedelta_toTimestamp(timedelta: Timedelta): [number, number, nu
       if (timedeltaStart.microseconds < timedelta.microseconds) {
         let microseconds = timedelta.microseconds - timedeltaStart.microseconds;
         timedeltaStart.microseconds += microseconds;
-        countMicros += microseconds;
+        microsLeft += microseconds;
       }
 
       if (timedeltaStart.microseconds > timedelta.microseconds) {
         let microseconds = timedeltaStart.microseconds - timedelta.microseconds;
         timedeltaStart.microseconds += -microseconds;
-        countMicros += -microseconds;
+        microsLeft += -microseconds;
       }
 
       continue;
     }
   }
 
-  const currentWeekday = weekday + ((countDays % DAYS_IN_WEEK) % DAYS_IN_WEEK);
+  weekday += countDays % DAYS_IN_WEEK
+  weekday %= DAYS_IN_WEEK;
 
   // update microseconds with milliseconds
   // countMicros += timestamp * MICROSECONDS_IN_MILLISECOND;
 
-  return [timestamp, countMicros, currentWeekday];
+  return {
+    timedelta: timedelta,
+    timestamp: timestamp,
+    weekday: weekday,
+    microseconds: microsLeft,
+    timezone: timedelta.timezone,
+  };
+}
+
+// create timestamp to timedelta, or
+// string formatting to timedelta
+
+export function Timedelta_addition(currentTimedelta: Timedelta, timedelta: Timedelta): void {
+  Timedelta_addYears(currentTimedelta, timedelta.years);
+  Timedelta_addMonths(currentTimedelta, timedelta.months);
+  Timedelta_addDays(currentTimedelta, timedelta.days);
+  Timedelta_addHours(currentTimedelta, timedelta.hours);
+  Timedelta_addMinutes(currentTimedelta, timedelta.minutes);
+  Timedelta_addSeconds(currentTimedelta, timedelta.seconds);
+  Timedelta_addMicroseconds(currentTimedelta, timedelta.microseconds);
+}
+
+export function Timedelta_subtraction(currentTimedelta: Timedelta, timedelta: Timedelta): void {
+  Timedelta_addMicroseconds(currentTimedelta, -timedelta.microseconds);
+  Timedelta_addSeconds(currentTimedelta, -timedelta.seconds);
+  Timedelta_addMinutes(currentTimedelta, -timedelta.minutes);
+  Timedelta_addHours(currentTimedelta, -timedelta.hours);
+  Timedelta_addDays(currentTimedelta, -timedelta.days);
+  Timedelta_addMonths(currentTimedelta, -timedelta.months);
+  Timedelta_addYears(currentTimedelta, -timedelta.years);
 }
 
 export interface DateTimeImpl {
-  // isLeapYears(year: number): boolean;
-  // daysInYears(year: number): number;
-  // daysInMonths(year: number, month: Months): number;
-  // secondsInMilliseconds(seconds: number): number;
-  // minutesInMilliseconds(minutes: number): number;
-  // hoursInMilliseconds(hours: number): number;
-  // daysInMilliseconds(days: number): number;
+  weekday(): number;
+  isLeapYear(year: number): boolean;
   equals(timedelta: Timedelta): boolean;
   lessThan(timedelta: Timedelta): boolean;
   lessThanEquals(timedelta: Timedelta): boolean;
   greaterThan(timedelta: Timedelta): boolean;
   greaterThanEquals(timedelta: Timedelta): boolean;
+  getTimedelta(): Timedelta;
+  getYears(): number;
+  getMonths(): number;
+  getDays(): number;
+  getHours(): number;
+  getMinutes(): number;
+  getSeconds(): number;
+  getMicroseconds(): number;
+  addTimedelta(timedelta: Timedelta): void;
+  addYears(years: number): void;
+  addMonths(months: number): void;
   addDays(days: number): void;
-  copy(): Timedelta;
-  toTimestamp(): [number, number, number];
+  addHours(hours: number): void;
+  addMinutes(minutes: number): void;
+  addSeconds(seconds: number): void;
+  addMicroseconds(microseconds: number): void;
+  subTimedelta(timedelta: Timedelta): void;
+  toTimestamp(): number;
+  copy(): DateTimeImpl;
 }
 
-export default class DateTime implements DateTimeImpl {
-  public timedelta: Timedelta;
-
+export class DateTime implements DateTimeImpl {
+  private datetimeCache: DateTimePreload;
+  private timedelta: Timedelta;
   constructor(timedelta: Timedelta) {
-    this.timedelta = timedelta;
+    this.datetimeCache = Timedelta_preload(timedelta);
+    this.timedelta = Timedelta_copy(this.datetimeCache.timedelta);
   }
-
-  static isLeapYears(year: number): boolean {
-    return Timedelta_isLeapYears(year);
+  preload(): void {
+    if (!Timedelta_equals(this.datetimeCache.timedelta, this.timedelta)) {
+      this.datetimeCache = Timedelta_preload(this.timedelta);
+      this.timedelta = Timedelta_copy(this.datetimeCache.timedelta);
+    }
   }
-
-  static daysInYears(year: number): number {
-    return Timedelta_daysInYears(year);
+  weekday(): number {
+    this.preload();
+    return this.datetimeCache.weekday;
   }
-
-  static daysInMonths(year: number, month: Months): number {
-    return Timedelta_daysInMonths(year, month);
+  isLeapYear(year: number): boolean {
+    return Timedelta_isLeapYear(this.timedelta.years);
   }
-
-  static secondsInMilliseconds(seconds: number): number {
-    return Timedelta_secondsInMilliseconds(seconds);
-  }
-
-  static minutesInMilliseconds(minutes: number): number {
-    return Timedelta_minutesInMilliseconds(minutes);
-  }
-
-  static hoursInMilliseconds(hours: number): number {
-    return Timedelta_hoursInMilliseconds(hours);
-  }
-
-  static daysInMilliseconds(days: number): number {
-    return Timedelta_daysInMilliseconds(days);
-  }
-
   equals(timedelta: Timedelta): boolean {
     return Timedelta_equals(this.timedelta, timedelta);
   }
-
   lessThan(timedelta: Timedelta): boolean {
     return Timedelta_lessThan(this.timedelta, timedelta);
   }
-
   lessThanEquals(timedelta: Timedelta): boolean {
     return Timedelta_lessThanEquals(this.timedelta, timedelta);
   }
-
   greaterThan(timedelta: Timedelta): boolean {
     return Timedelta_greaterThan(this.timedelta, timedelta);
   }
-
   greaterThanEquals(timedelta: Timedelta): boolean {
     return Timedelta_greaterThanEquals(this.timedelta, timedelta);
   }
-
-  addDays(days: number): void {
-    Timedelta_addDays(this.timedelta, days);
-
-    return;
-  }
-
-  copy(): Timedelta {
+  getTimedelta(): Timedelta {
     return Timedelta_copy(this.timedelta);
   }
-
-  toTimestamp(): [number, number, number] {
-    return Timedelta_toTimestamp(this.timedelta);
+  getYears(): number {
+    return this.timedelta.years;
+  }
+  getMonths(): number {
+    return this.timedelta.months;
+  }
+  getDays(): number {
+    return this.timedelta.days;
+  }
+  getHours(): number {
+    return this.timedelta.hours;
+  }
+  getMinutes(): number {
+    return this.timedelta.minutes;
+  }
+  getSeconds(): number {
+    return this.timedelta.seconds;
+  }
+  getMicroseconds(): number {
+    return this.timedelta.microseconds;
+  }
+  addTimedelta(timedelta: Timedelta): void {
+    Timedelta_addition(this.timedelta, timedelta);
+  }
+  addYears(years: number): void {
+    Timedelta_addYears(this.timedelta, years);
+  }
+  addMonths(months: number): void {
+    Timedelta_addMonths(this.timedelta, months);
+  }
+  addDays(days: number): void {
+    Timedelta_addDays(this.timedelta, days);
+  }
+  addHours(hours: number): void {
+    Timedelta_addHours(this.timedelta, hours);
+  }
+  addMinutes(minutes: number): void {
+    Timedelta_addMinutes(this.timedelta, minutes);
+  }
+  addSeconds(seconds: number): void {
+    Timedelta_addSeconds(this.timedelta, seconds);
+  }
+  addMicroseconds(microseconds: number): void {
+    Timedelta_addMicroseconds(this.timedelta, microseconds);
+  }
+  subTimedelta(timedelta: Timedelta): void {
+    Timedelta_subtraction(this.timedelta, timedelta);
+  }
+  toTimestamp(): number {
+    this.preload();
+    return this.datetimeCache.timestamp;
+  }
+  copy(): DateTimeImpl {
+    return new DateTime(this.getTimedelta());
   }
 }
