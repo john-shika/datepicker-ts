@@ -39,7 +39,7 @@ def main():
         seed = "  {" + fields + "  }"
         seeds.append(seed)
         
-    data = """interface DateTimePreload {\n  timedelta: Timedelta;\n  timestamp: number;\n  weekday: number;\n  microseconds: number;\n  timezone: TimeZone;\n}\n\nexport const TIME_DELTA_SEEDS: DateTimePreload[] = [\n"""
+    data = """interface DateTimePreload {\n  timedelta: Timedelta;\n  timestamp: number;\n  weekday: number;\n  microseconds: number;\n  timezone: TimeZone;\n}\n\nexport const TIMEDELTA_SEEDS: DateTimePreload[] = [\n"""
     data += ",\n".join(seeds) + "\n]"
     print(data)
 

@@ -40,12 +40,12 @@ export default tseslint.config(js.configs.recommended, {
   },
   ignores: [
     ".env",
-    ".mypy_cache/**/*",
-    "__pycache__/**/*",
-    "build/**/*",
-    "dist/**/*",
-    "node_modules/**/*",
-    "public/**/*",
+    ".mypy_cache",
+    "__pycache__",
+    "build",
+    "dist",
+    "node_modules",
+    "public",
     "src/styles/tailwind.css",
   ],
 });

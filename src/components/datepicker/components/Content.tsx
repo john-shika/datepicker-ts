@@ -1,5 +1,6 @@
 import * as React from "react";
-import { ArrowBack as ArrowBackIcon, ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
+import { ArrowBack as ArrowLeftIcon, ArrowForward as ArrowRightIcon } from "@mui/icons-material";
+// import { FaArrowLeft as ArrowLeftIcon, FaArrowRight as ArrowRightIcon } from "react-icons/fa6";
 
 export default function Content(): React.JSX.Element {
   return (
@@ -13,7 +14,7 @@ export default function Content(): React.JSX.Element {
         </div>
         <div className="flex items-center justify-between w-full gap-2 my-2">
           <div className="flex justify-center items-center w-10 h-10 gap-2 py-1 px-2 rounded-md border border-gray-300 text-xs font-medium text-gray-900 transition-all duration-500 hover:bg-indigo-100 hover:text-indigo-600">
-            <ArrowBackIcon />
+            <ArrowLeftIcon fontSize="medium" className="text-gray-600" />
           </div>
           <div className="flex justify-center items-center bg-sky-100 w-[80px] h-10 gap-2 py-1 px-2 rounded-md border border-gray-300 text-xs font-medium text-gray-900 transition-all duration-500 hover:bg-indigo-100 hover:text-indigo-600">
             January
@@ -22,7 +23,7 @@ export default function Content(): React.JSX.Element {
             2023
           </div>
           <div className="flex justify-center items-center w-10 h-10 gap-2 py-1 px-2 rounded-md border border-gray-300 text-xs font-medium text-gray-900 transition-all duration-500 hover:bg-indigo-100 hover:text-indigo-600">
-            <ArrowForwardIcon />
+            <ArrowRightIcon fontSize="medium" className="text-gray-600" />
           </div>
         </div>
         <table className="pb-3 border-b border-gray-300 w-max mx-auto">

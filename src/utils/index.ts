@@ -50,3 +50,19 @@ export function unsafeMergeAny(a: any, b: any): any {
   // override
   return b;
 }
+
+export async function sleep(milliseconds: number): Promise<void> {
+  let start = Number(new Date());
+  let expected = start + milliseconds;
+  while (true) {
+    let end = Number(new Date());
+    if (expected <= end) break;
+  }
+}
+
+export async function watchTimer(fn: CallableFunction): Promise<number> {
+  let start = new Date();
+  fn();
+  let end = new Date();
+  return end.getTime() - start.getTime();
+}

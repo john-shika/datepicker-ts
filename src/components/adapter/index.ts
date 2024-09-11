@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Plugin as VuePlugin } from "vue";
 import type { VuePluginPack } from "./interfaces";
 import VueMixAdapter from "./VueMixAdapter";
