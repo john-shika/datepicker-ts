@@ -32,7 +32,7 @@ export const NANOSECONDS_IN_MICROSECOND = 1000;
  * 6: Sunday
  * */
 
-export enum Days {
+export enum Weekdays {
   Unknown = 0,
   Sunday,
   Monday,
@@ -51,54 +51,54 @@ export enum Days {
  * Python `datetime.date(1970, 1, 5).weekday()` equals to 0 (Monday)
  * */
 
-export function Days_daysToIdx(day: Days): number {
+export function Weekdays_daysToIdx(day: Weekdays): number {
   switch (day) {
-    case Days.Monday:
+    case Weekdays.Monday:
       return 0;
-    case Days.Tuesday:
+    case Weekdays.Tuesday:
       return 1;
-    case Days.Wednesday:
+    case Weekdays.Wednesday:
       return 2;
-    case Days.Thursday:
+    case Weekdays.Thursday:
       return 3;
-    case Days.Friday:
+    case Weekdays.Friday:
       return 4;
-    case Days.Saturday:
+    case Weekdays.Saturday:
       return 5;
-    case Days.Sunday:
+    case Weekdays.Sunday:
       return 6;
     default:
       throw new Error("Invalid Days");
   }
 }
 
-export function Days_idxToDays(idx: number): Days {
+export function Weekdays_idxToDays(idx: number): Weekdays {
   switch (idx) {
     case 0:
-      return Days.Monday;
+      return Weekdays.Monday;
     case 1:
-      return Days.Tuesday;
+      return Weekdays.Tuesday;
     case 2:
-      return Days.Wednesday;
+      return Weekdays.Wednesday;
     case 3:
-      return Days.Thursday;
+      return Weekdays.Thursday;
     case 4:
-      return Days.Friday;
+      return Weekdays.Friday;
     case 5:
-      return Days.Saturday;
+      return Weekdays.Saturday;
     case 6:
-      return Days.Sunday;
+      return Weekdays.Sunday;
     default:
       throw new Error("Invalid Days");
   }
 }
 
-export function Days_nextDays(days: Days): Days {
-  return Days_idxToDays(Days_nextDaysIdx(Days_daysToIdx(days)));
+export function Weekdays_nextDays(days: Weekdays): Weekdays {
+  return Weekdays_idxToDays(Weekdays_nextDaysIdx(Weekdays_daysToIdx(days)));
 }
 
-export function Days_prevDays(days: Days): Days {
-  return Days_idxToDays(Days_prevDaysIdx(Days_daysToIdx(days)));
+export function Weekdays_prevDays(days: Weekdays): Weekdays {
+  return Weekdays_idxToDays(Weekdays_prevDaysIdx(Weekdays_daysToIdx(days)));
 }
 
 /*
@@ -110,68 +110,68 @@ export function Days_prevDays(days: Days): Days {
  * - Sunday is the last, index at 6
  * */
 
-export function Days_nextDaysIdx(idx: number): number {
+export function Weekdays_nextDaysIdx(idx: number): number {
   let val = idx + 1;
   if (val > 6) val += -7;
   return val;
 }
 
-export function Days_prevDaysIdx(idx: number): number {
+export function Weekdays_prevDaysIdx(idx: number): number {
   let val = idx - 1;
   if (val < 0) val += 7;
   return val;
 }
 
-export function Days_daysToName(days: Days): string {
+export function Weekdays_daysToName(days: Weekdays): string {
   switch (days) {
-    case Days.Sunday:
+    case Weekdays.Sunday:
       return "Sunday";
-    case Days.Monday:
+    case Weekdays.Monday:
       return "Monday";
-    case Days.Tuesday:
+    case Weekdays.Tuesday:
       return "Tuesday";
-    case Days.Wednesday:
+    case Weekdays.Wednesday:
       return "Wednesday";
-    case Days.Thursday:
+    case Weekdays.Thursday:
       return "Thursday";
-    case Days.Friday:
+    case Weekdays.Friday:
       return "Friday";
-    case Days.Saturday:
+    case Weekdays.Saturday:
       return "Saturday";
     default:
       return "Unknown";
   }
 }
 
-export function Days_nameToDays(value: string): Days {
+export function Weekdays_nameToDays(value: string): Weekdays {
   switch (value.toLowerCase()) {
     case "sun":
     case "sunday":
-      return Days.Sunday;
+      return Weekdays.Sunday;
     case "mon":
     case "monday":
-      return Days.Monday;
+      return Weekdays.Monday;
     case "tue":
     case "tues":
     case "tuesday":
-      return Days.Tuesday;
+      return Weekdays.Tuesday;
     case "wed":
     case "wednes":
     case "wednesday":
-      return Days.Wednesday;
+      return Weekdays.Wednesday;
     case "thu":
     case "thurs":
     case "thursday":
-      return Days.Thursday;
+      return Weekdays.Thursday;
     case "fri":
     case "friday":
-      return Days.Friday;
+      return Weekdays.Friday;
     case "sat":
     case "satur":
     case "saturday":
-      return Days.Saturday;
+      return Weekdays.Saturday;
     default:
-      return Days.Unknown;
+      return Weekdays.Unknown;
   }
 }
 
@@ -399,7 +399,7 @@ export class Timedelta implements TimedeltaImpl {
   constructor(
     years: number,
     months: Months,
-    days: Days,
+    days: Weekdays,
     hours: number,
     minutes: number,
     seconds: number,
